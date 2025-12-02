@@ -1,6 +1,4 @@
-# Lilka-ESPHome
-
-# 💻 ESPHome LVGL для Lilka
+# ESPHome LVGL для Lilka
 
 **ESPHome конфігурація для Lilka на базі ESP32-S3 з підтримкою графічного фреймворку LVGL (LittlevGL).**
 

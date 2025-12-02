@@ -4,6 +4,8 @@ ESPHome конфігурація для Lilka на базі ESP32-S3 з підт
 
 ![IMG_2284](https://github.com/user-attachments/assets/330f7477-2f81-4e32-b60c-75d941f841c9)
 
+<img width="1210" height="921" alt="Знімок екрана 2025-12-03 о 01 34 48" src="https://github.com/user-attachments/assets/aa8b4a79-af43-46ef-9e38-227d2103d3d0" />
+
 ---
 
 

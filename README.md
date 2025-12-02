@@ -66,10 +66,6 @@
 | D | 9 | |
 | Start | 4 | |
 
-### Зв'язок з Home Assistant
-
-* **Switch:** `switch.boiler_switch` керується кнопкою `Select` і відображається на LVGL.
-* **BLE:** Функція `bluetooth_proxy` для виявлення пристроїв Home Assistant.
 
 ---
 

@@ -68,7 +68,7 @@
 
 ## 🚀 Встановлення
 
-1.  Встановіть [ESPHome](https://esphome.io/guides/getting_started_cli.html).
+1.  Встановіть [ESPHome](https://dou.ua/forums/topic/42488/).
 2.  Створіть файл конфігурації `lilka.yaml`.
 3.  Налаштуйте **WiFi credentials** у `secrets.yaml`:
     ```yaml

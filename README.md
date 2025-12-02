@@ -32,7 +32,7 @@
 
 # 🏡 Керування пристроями Home Assistant (HA)
 
-* **Двосторонній Зв'язок:** ESPHome може отримувати статус (`sensor.homeassistant`) та керувати сутностями (`switch.homeassistant`) у Home Assistant.
+* **Двосторонній Зв'язок:** ESPHome може отримувати статус та [керувати пристроями](https://esphome.io/components/sensor/homeassistant/) Home Assistant.
 * **Налаштування HA:** Для роботи функції керування в інтеграції ESPHome у Home Assistant потрібно увімкнути опцію "Enable the API to allow the ESP device to register and control entities in Home Assistant." [Демо відео](https://youtu.be/4dKZSFFEjWA).
 
 ---

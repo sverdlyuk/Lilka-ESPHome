@@ -1,0 +1,254 @@
+esphome:
+  name: lilka
+  friendly_name: lilka
+  on_boot:
+    priority: 600
+    then:
+      - output.turn_on: display_power
+      - delay: 100ms
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: y
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: y
+      CONFIG_SPIRAM_MODE_OCT: y
+      CONFIG_SPIRAM: y
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  power_save_mode: none
+  ap:
+    ssid: "Lilka Fallback Hotspot"
+    password: "hnYImYM4O6I0"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+api:
+  encryption:
+    key: "Yw3yq8lxsaze+jdggjAwxKpV4GD6gNZptvw4d6OPfOc="
+
+logger:
+  level: INFO
+  logs:
+    lvgl: WARN
+
+ota:
+  - platform: esphome
+    password: "bb198feb99159fdaefc8092f10039acd"
+
+output:
+  - platform: gpio
+    pin: 46
+    id: display_power
+    inverted: false
+
+spi:
+  clk_pin: 18
+  mosi_pin: 17
+
+display:
+  - platform: mipi_spi
+    model: ST7789V
+    id: my_display
+    dc_pin: 15
+    cs_pin: 7
+    update_interval: 2s
+    rotation: 270
+    invert_colors: true
+    color_order: BGR
+    pixel_mode: 16bit
+    dimensions:
+      width: 280
+      height: 240
+      offset_width: 20
+      offset_height: 0
+    auto_clear_enabled: false
+
+lvgl:
+  log_level: WARN
+  buffer_size: 25%
+  style_definitions:
+    - id: style_btn_off
+      bg_color: 0x808080
+      text_color: 0x000000
+      border_width: 0
+      radius: 6
+    - id: style_btn_on
+      bg_color: 0x00FF00
+      text_color: 0x000000
+      border_width: 0
+      radius: 6
+    - id: style_focused
+      border_color: 0xFFFFFF
+      border_width: 3
+
+  pages:
+    - id: main_page
+      bg_color: 0x000000
+      widgets:
+        - obj:
+            align: CENTER
+            width: 260
+            height: 220
+            bg_opa: TRANSP
+            layout:
+              type: FLEX
+              flex_flow: COLUMN
+              flex_align_main: CENTER
+              flex_align_cross: CENTER
+              pad_row: 10
+            widgets:
+              - button:
+                  id: vana_button
+                  width: 200
+                  height: 50
+                  checkable: true
+                  styles: style_btn_off
+                  widgets:
+                    - label:
+                        text: "Bathroom"
+                        align: CENTER
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: light.tz3000_qewo8dlz_ts0013_light
+
+              - button:
+                  id: komora_button
+                  width: 200
+                  height: 50
+                  checkable: true
+                  styles: style_btn_off
+                  widgets:
+                    - label:
+                        text: "Pantry"
+                        align: CENTER
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: light.tz3000_qewo8dlz_ts0013_light_2
+
+              - button:
+                  id: kitchen_button
+                  width: 200
+                  height: 50
+                  checkable: true
+                  styles: style_btn_off
+                  widgets:
+                    - label:
+                        text: "Kitchen"
+                        align: CENTER
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: light.tz3000_qewo8dlz_ts0013_light_3
+
+globals:
+  - id: current_button_index
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+script:
+  - id: update_focus
+    then:
+      - lvgl.widget.update:
+          id: vana_button
+          border_width: !lambda 'return id(current_button_index) == 0 ? 3 : 0;'
+      - lvgl.widget.update:
+          id: komora_button
+          border_width: !lambda 'return id(current_button_index) == 1 ? 3 : 0;'
+      - lvgl.widget.update:
+          id: kitchen_button
+          border_width: !lambda 'return id(current_button_index) == 2 ? 3 : 0;'
+
+binary_sensor:
+  # Home Assistant світла
+  - platform: homeassistant
+    id: vana_light
+    entity_id: light.tz3000_qewo8dlz_ts0013_light
+    internal: true
+    on_state:
+      then:
+        - lvgl.widget.update:
+            id: vana_button
+            state:
+              checked: !lambda 'return id(vana_light).state;'
+
+  - platform: homeassistant
+    id: komora_light
+    entity_id: light.tz3000_qewo8dlz_ts0013_light_2
+    internal: true
+    on_state:
+      then:
+        - lvgl.widget.update:
+            id: komora_button
+            state:
+              checked: !lambda 'return id(komora_light).state;'
+
+  - platform: homeassistant
+    id: kitchen_light
+    entity_id: light.tz3000_qewo8dlz_ts0013_light_3
+    internal: true
+    on_state:
+      then:
+        - lvgl.widget.update:
+            id: kitchen_button
+            state:
+              checked: !lambda 'return id(kitchen_light).state;'
+
+  # Фізичні кнопки
+  - platform: gpio
+    pin:
+      number: 38
+      mode: INPUT_PULLUP
+      inverted: true
+    id: button_up
+    on_press:
+      - lambda: |-
+          id(current_button_index)--;
+          if (id(current_button_index) < 0) id(current_button_index) = 2;
+      - script.execute: update_focus
+
+  - platform: gpio
+    pin:
+      number: 41
+      mode: INPUT_PULLUP
+      inverted: true
+    id: button_down
+    on_press:
+      - lambda: |-
+          id(current_button_index)++;
+          if (id(current_button_index) > 2) id(current_button_index) = 0;
+      - script.execute: update_focus
+
+  - platform: gpio
+    pin:
+      number: 0
+      mode: INPUT_PULLUP
+      inverted: true
+    id: button_select
+    on_press:
+      then:
+        - homeassistant.action:
+            action: light.toggle
+            data:
+              entity_id: !lambda |-
+                if (id(current_button_index) == 0) return "light.tz3000_qewo8dlz_ts0013_light";
+                if (id(current_button_index) == 1) return "light.tz3000_qewo8dlz_ts0013_light_2";
+                return "light.tz3000_qewo8dlz_ts0013_light_3";

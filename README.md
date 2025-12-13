@@ -43,26 +43,27 @@ ESPHome конфігурація для Lilka на базі ESP32-S3 з підт
 
 ## 🛠️ Зведена Таблиця Апаратного Забезпечення Lilka
 
-Pin	Function
-46	Display power (GPIO output)
-1	I2S LRCLK for speaker
-42	I2S BCLK for speaker
-2	I2S DOUT — audio output
-3	ADC input for battery voltage
-18	SPI CLK for display
-17	SPI MOSI for display
-15	ST7789 DC
-7	ST7789 CS
-38	Button Up
-41	Button Down
-39	Button Left
-40	Button Right
-5	Button A
-6	Button B
-10	Button C
-9	Button D
-4	Button Start
-0	Button Select
+| Pin | Function |
+|-----|----------|
+| 46  | Display power (GPIO output) |
+| 1   | I2S LRCLK for speaker |
+| 42  | I2S BCLK for speaker |
+| 2   | I2S DOUT — audio output |
+| 3   | ADC input for battery voltage |
+| 18  | SPI CLK for display |
+| 17  | SPI MOSI for display |
+| 15  | ST7789 DC |
+| 7   | ST7789 CS |
+| 38  | Button Up |
+| 41  | Button Down |
+| 39  | Button Left |
+| 40  | Button Right |
+| 5   | Button A |
+| 6   | Button B |
+| 10  | Button C |
+| 9   | Button D |
+| 4   | Button Start |
+| 0   | Button Select |
 
 ## 🚀 Встановлення та налаштування
 
